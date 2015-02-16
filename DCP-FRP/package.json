@@ -1,0 +1,11 @@
+{
+"name": "DCP",
+"description": "Distributed Command Processor",
+"version": "1.0.0",
+	"dependencies": {
+		"socket.io": "~1",
+		"socket.io-client": "~1",
+		"bluebird": "~2.9",
+		"baconjs": "~0.7"
+	}
+}

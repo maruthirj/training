@@ -148,15 +148,3 @@ cpasynce.processCommandAsync('ls', [ '/Users/masruthir' ]).then(
 console.log("ls command fired");
 
 
-var join = Promise.join;
-
-var totalSize = 0;
-Promise.reduce(
-		[ fs.readFileAsync("package.json"), fs.readFileAsync("package2.json") ],
-		function(totalSize, content) {
-			console.log(content.toString('utf8'));
-			return totalSize + content.toString('utf8').length;
-		}, 0).then(function(total) {
-				console.log("Total size of files: " + total);
-		});
-

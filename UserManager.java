@@ -37,6 +37,23 @@ public class UserManager {
 		}
 		return users;
 	}
+	
+	public User getUser(Integer id) throws Exception{
+		Statement statement = con.createStatement();
+		ResultSet rs = statement.executeQuery("select * from users where id="+id);
+		while(rs.next()){
+			User u = new User();
+			u.setId(rs.getInt("id"));
+			u.setAge(rs.getInt("age"));
+			u.setEmailId(rs.getString("email_id"));
+			u.setJoinDate(rs.getDate("join_date"));
+			u.setName(rs.getString("name"));
+			u.setPassword(rs.getString("password"));
+			u.setState(rs.getString("state"));
+			return u;
+		}
+		return null;//User not found
+	}
 
 	public void addUser(User u) throws Exception{
 		Statement st = con.createStatement();

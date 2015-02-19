@@ -13,11 +13,8 @@ public class UserManager {
 	private static Connection con;
 	static {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/training","root", "");
-			
-//			Class.forName("org.postgresql.Driver");
-//			con = DriverManager.getConnection("jdbc:postgresql://localhost/test","root", "admin");
+			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+			con = DriverManager.getConnection("jdbc:derby:c:\\mydb;create=true");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

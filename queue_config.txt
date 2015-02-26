@@ -1,0 +1,4 @@
+<jms-queue name="email_events">
+	<entry name="queue/email_events"/>
+	<entry name="java:jboss/exported/jms/queue/email_events"/>
+</jms-queue>

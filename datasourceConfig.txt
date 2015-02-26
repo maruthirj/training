@@ -1,0 +1,26 @@
+Place this in datasources section:
+
+
+<datasource jndi-name="java:/DerbyDS" pool-name="DerbyDS" enabled="true" use-ccm="false">
+                    <connection-url>jdbc:derby://localhost:1527//Users/maruthir/Documents/Training/workspace/CRUD/WebContent/WEB-INF/mydb</connection-url>
+                    <driver-class>org.apache.derby.jdbc.ClientDriver</driver-class>
+                    <driver>org.apache.derby</driver>
+                    <security>
+                        <user-name>APP</user-name>
+                        <password>app</password>
+                    </security>
+                    <validation>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>false</background-validation>
+                    </validation>
+                    <statement>
+                        <share-prepared-statements>false</share-prepared-statements>
+                    </statement>
+                </datasource>
+                
+Place this in drivers section:
+
+ <driver name="org.apache.derby" module="org.apache.derby">
+                        <driver-class>org.apache.derby.jdbc.ClientDriver</driver-class>
+                        <xa-datasource-class>org.apache.derby.jdbc.ClientXADataSource</xa-datasource-class>
+                    </driver>

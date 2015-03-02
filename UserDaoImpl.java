@@ -13,8 +13,8 @@ import com.mydomain.model.User;
 import com.mydomain.security.Secure;
 import com.mydomain.security.Secureable;
 
-@Secure
-public abstract class UserDaoImpl implements UserDao, Secureable, UserDaoRemote {
+
+public class UserDaoImpl implements UserDao {
 	Logger log = Logger.getLogger(UserDaoImpl.class.getName()); 
 	
 	public UserDaoImpl(){
@@ -23,12 +23,11 @@ public abstract class UserDaoImpl implements UserDao, Secureable, UserDaoRemote 
 
 	
 	
-	private Connection getConnection() throws Exception{
+	private Connection getCon() throws Exception{
 		Class.forName("org.apache.derby.jdbc.ClientDriver");
 		return DriverManager.getConnection("jdbc:derby://localhost:1527//Users/maruthir/Documents/Training/workspace/CRUD/WebContent/WEB-INF/mydb");
 	}
 	
-	public abstract Connection getCon();
 	
 
 	public List<User> getAllUsers() throws Exception{

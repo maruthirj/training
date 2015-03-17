@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- when user clicks on “show details” load the details into the detailed pane for the selected book 
+then make the zoom increase the image size by 120%-->
+<script src="scripts/jquery-2.1.3.js"></script>
+<script type="text/javascript">
+
+$( document ).ready(function(){
+	$("td input").click(function(event){
+		var img = $(event.currentTarget).parent().next().find("img");
+		$("#book_preview").html(img.clone());
+	});
+	
+	$("input[value='zoom']").click(function(){
+		var image = $("#book_preview img");
+		var currentWidth = image.width();
+		var currentHeight = image.height();
+		var newWidth = currentWidth * 1.2;
+		
+		zoomFunc = function(){
+			image.width(currentWidth++);
+			image.height(currentHeight++);
+			if(currentWidth!=newWidth)
+				setTimeout(zoomFunc,100);
+		}
+		setTimeout(zoomFunc,100);
+	});
+});
+
+</script>
+
+</head>
+<body>
+<table>
+<tr><td>Harry Potter and Sorcerers Stone</td><td><input type="button" value="Show Details"/></td>
+<td style="display : none;">
+<img src="images/Cover-SorcerersStone.jpg"/>
+</td></tr>
+<tr><td>Harry Potter and Chamber of Secrets</td><td><input type="button" value="Show Details"/></td>
+<td style="display : none;">
+<img src="images/Chamber_of_secrets-cover.jpg"/>
+</td></tr>
+</table>
+<div id="book_preview">
+</div>
+<input type="button" value="zoom" />
+</html>

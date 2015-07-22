@@ -25,14 +25,14 @@ public class ThreadPool
 	};
 	
 	public static void main(String[] args) {
-		//ThreadPool tp = new ThreadPool(5);
-		Executor executor = Executors.newFixedThreadPool(5);
+		ThreadPool tp = new ThreadPool(5);
+//		Executor executor = Executors.newFixedThreadPool(5);
 		for(int i=0; i<100; i++){
-//			if(i%2==0)
-//				tp.addTask(runner1);
-//			else
-//				tp.addTask(runner2);
-			executor.execute(runner1);
+			if(i%2==0)
+				tp.addTask(runner1);
+			else
+				tp.addTask(runner2);
+//			executor.execute(runner1);
 		}
 		
 	}

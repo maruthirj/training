@@ -1,0 +1,70 @@
+github.com/maruthirj/training
+Download the derby...
+download mydb.zip
+
+
+One to Many
+
+User <---> order
+
+id - uid in order table
+One to one
+
+Many to Many
+
+Order <---> Products
+Link table with oid and pid
+--------------------------
+Setting up the derby database:
+unzip derby software 
+open up a command prompt and change directory to the db-derby-10.11.1.1-bin\bin
+run these commands:
+Windows:
+set DERBY_HOME=..\
+setNetworkServerCP
+startNetworkServer
+Mac:
+export DERBY_HOME=../
+./setNetworkServerCP.sh
+./startNetworkServer.sh
+
+This starts up the database
+
+Create a simple maven project
+Skip archetype selection
+https://github.com/maruthirj/training
+Go to github and copy dependencies from the shared pom.xml
+Copy hibernate.cfg.xml and users.hbm.xml from github into src/main/java
+Copy HibTest.java and User.java from github into src/main/java in a suitable project
+Change the url in hibernate.cfg.xml
+jdbc:derby://localhost:1527/c:/somefolder/mydb/mydb
+Get the HibTest.java running
+
+
+Setup instructions for vagrant
+https://gist.github.com/initcron/8636d2b5fb2a7c69b2fd
+After vagrant ssh
+sudo su -
+wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -57,6 +57,21 @@ If it does not exist, create the src/main/java folder
 Create a new class called RestApplication like below:
 Create a new class UserResource like below:
 
+To run this we have to export this as a war and deploy it inside tomcat.
+Right click project -> export -> war file
+Select a destination for war.
+unzip tomcat8 in some folder
+copy the war file to tomcat8\webapps folder
+open command prompt and change directory to tomcat\bin
+make sure JAVA_HOME environment variable is set
+	Windows: set JAVA_HOME=c:\program files\java\jdk...
+	Mac: export JAVA_HOME=/Library/Frameworks....
+run the server
+	Windows: startup
+	Mac: ./startup.sh
+
+To test access: http://localhost:8080/warname/services/users
+
 package com.mydomain.app;
 
 @ApplicationPath("/services")

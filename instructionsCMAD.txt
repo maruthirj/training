@@ -46,8 +46,47 @@ https://gist.github.com/initcron/8636d2b5fb2a7c69b2fd
 After vagrant ssh
 sudo su -
 wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
+------------------------------
+Implementing REST with JAX RS
+------------------------------
+Create a new maven project
+Do not select the "skip archetype selection" check box
+On archetype selection screen select "maven-archetype-webapp"
+Pickup the dependencies from pom2.xml on github and place it in your pom.xml
+If it does not exist, create the src/main/java folder
+Create a new class called RestApplication like below:
+Create a new class UserResource like below:
+
+package com.mydomain.app;
+
+@ApplicationPath("/services")
+public class RestApplication extends Application {
+	private Set<Object> singletons = new HashSet<Object>();
+	private Set<Class<?>> empty = new HashSet<Class<?>>();
+	public RestApplication() {
+		singletons.add(new UserResource());
+	}
+	public Set<Class<?>> getClasses() {
+		return empty;
+	}
+	public Set<Object> getSingletons() {
+		return singletons;
+	}	
+}
 
 
+@Path("/users")
+public class UserResource {
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getUsers() {
+		List<User> users = new ArrayList<>();
+		User u = new User();
+		u.setName(...)
+		users.add(u);
+		return u;
+	}
+}
 
 
 

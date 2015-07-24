@@ -1,3 +1,6 @@
+Camtasia recording download link: https://www.dropbox.com/s/m67of4aesi06mzh/CamtasiaRecording.zip?dl=0
+
+
 github.com/maruthirj/training
 Download the derby...
 download mydb.zip
@@ -229,10 +232,35 @@ DELETE http://localhost:8080/warname/services/users/3
 		//session.delete....
 	}
 
+Create a new html file: users.html in webapp folder
+In the script section, use rest api to load and render a list of users using JQuery
+Copy jquery js file into a folder called scripts in webapp folder
+Put this code into users.html
+<script type="text/javascript" src="scripts/jquery-2.1.3.js"></script>
+<script type="text/javascript">
 
+function loadUsers(){
+	$.ajax({
+		url: 'services/users',
+		method: 'get',
+		headers: { 'Accept': 'application/json' }, 
+		success: function(data) {
+			console.log("Data arrived");
+			$("#userTable").html("");
+			for(var index in data){
+				var row = "<tr><td>"+data[index].name+"</td><td>"+data[index].age+"</td></tr>";
+				$("#userTable").append(row);
+			}
+		}
+	});
+	console.log("Fired request");
+}
+$(document).ready(function() {
+		loadUsers();
+});
+</script>
 
-
-
+<table id="userTable"></table>
 
 
 

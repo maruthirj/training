@@ -120,6 +120,7 @@ public class RestApplication extends Application {
 
 @Path("/users")
 public class UserResource {
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> getUsers() {
@@ -129,21 +130,61 @@ public class UserResource {
 		users.add(u);
 		return users;
 	}
+	
+}
+-----------------------
+Integrate database backend with jaxrs
+-------------------------------------
+We will need to configure hibernate. Copy hibernate.cfg.xml and Users.hbm.xml 
+from the other project into the REST project under src/main/java
+Create a new class called HibernateUtil like below:
+In the UserResource::getUsers method we will retrive users from the database like this
+
+public List<User> getUsers() {
+	Session ses = HibernateUtil.currentSession();
+	return ses.createQuery("select u from User u").list();
 }
 
-Create a system with some of the features from StackOverflow.com
-We would like to implement the following features:
-1. Signup
-Users should be able to signup with an email address and password
-2. Login
-3. Post a question
-4. Comment/reply on a question
-5. View questions as a list
-6. up/down vote an answer (If possible)
 
-Backend should be implemented as REST APIs and frontend using JQuery
-When in doubt about the requirements, just make assumptions based on your own
-knowledge of how these kind of sites work. Just state your assumptions rather than stop work and ask questions about requirements
+public class HibernateUtil {
+
+	private static SessionFactory sesFac = null;
+	private static ThreadLocal<Session> tlSessions = new ThreadLocal<Session>();
+	static{
+		 Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+         ServiceRegistry serviceRegistry
+             = new StandardServiceRegistryBuilder()
+                 .applySettings(configuration.getProperties()).build();
+        sesFac = configuration.buildSessionFactory(serviceRegistry);
+	}
+	
+	
+
+	public static Session currentSession() {
+		Session ses = tlSessions.get();
+		if(ses == null){
+			ses = sesFac.openSession();
+			tlSessions.set(ses);
+		}
+		return ses;
+	}
+
+	public static void closeSession() {
+		Session ses = tlSessions.get();
+		if(ses!=null){
+			ses.close();
+			tlSessions.set(null);
+		}
+		
+	}
+}
+
+
+
+
+
+
+
 
 
 

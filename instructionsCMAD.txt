@@ -197,6 +197,7 @@ GET http://localhost:8080/warname/services/users?ageFrom=18&ageTo=30
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> getUsers(@QueryParam("ageFrom") Integer ageFrom,
 								@QueryParam("ageTo") Integer ageTo) {
+		ses.createQuery("select u from User u where u.age>"+ageFrom+" and u.age<"+ageTo).list();
 	}
 
 

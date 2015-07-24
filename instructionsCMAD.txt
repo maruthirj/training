@@ -269,7 +269,7 @@ $(document).ready(function() {
 Lets add the ability to add a user:
 Right below the table, lets create a button
 <table id="userTable"></table>
-<button value="Add" onclick="showAddForm()"/>
+<button onclick="showAddForm()">Add</button>
 <form id="userForm">
 	<input id="username" name="name"></input>
 	<input id="userage" name="age"></input>
@@ -292,9 +292,11 @@ function addUser(){
 					name: inputName,
 					age: inputAge
 					};
+	var jsonData = JSON.stringify(postData);
 	$.ajax({
 		url: 'services/users',
 		method: 'post',
+		data: jsonData,
 		headers: { 'Accept': 'application/json', 'Content-type': 'application/json' }, 
 		success: function(data) {
 			console.log("Add done");
@@ -307,7 +309,49 @@ function addUser(){
 	
 }
 
+----------------------------------
+Authentication:
+Web.xml
 
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+   	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>User access</web-resource-name>
+			<url-pattern>/services/users</url-pattern>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>ADMIN</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>jaxrs</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>ADMIN</role-name>
+	</security-role>
+ </web-app>
+
+
+TomcatUsers.xml to be changed
+
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	@RolesAllowed({ "ADMIN" })
+	public List<User> getUsers() {
+
+
+TO retrieve security information
+	@Context
+	SecurityContext securityCtx;
 
 
 

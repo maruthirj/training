@@ -46,6 +46,34 @@ https://gist.github.com/initcron/8636d2b5fb2a7c69b2fd
 After vagrant ssh
 sudo su -
 wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
+
+sudo apt-get install openjdk-7-jdk
+cp jenkins.war /var/lib/tomcat7/webapps/
+mkdir /usr/share/tomcat7/.jenkins
+chmod 777 /usr/share/tomcat7/.jenkins
+chmod 777 /usr/share/tomcat7/ -R
+service tomcat7 restart
+on your browser http://192.168.34.11:8080/jenkins 
+Manage
+Git Client Plugin
+Git plugin
+Manage Jenkins -> Configure System -> add maven -> install automatically
+Save
+Manage Jenkins -> Configure System -> JDK. 
+Uncheck Install automatically
+Provide path to the JDK under JAVA_HOME field.
+/usr/lib/jvm/java-7-openjdk-i386/
+ 
+Create Job
+Choose git
+Setup auth
+Post build step
+cp /usr/share/tomcat7/.jenkins/jobs/rest/workspace/target/<warfilename>.war /var/lib/tomcat7/webapps/
+
+Build
+Test
+
+
 ------------------------------
 Implementing REST with JAX RS
 ------------------------------
@@ -99,12 +127,23 @@ public class UserResource {
 		User u = new User();
 		u.setName(...)
 		users.add(u);
-		return u;
+		return users;
 	}
 }
 
+Create a system with some of the features from StackOverflow.com
+We would like to implement the following features:
+1. Signup
+Users should be able to signup with an email address and password
+2. Login
+3. Post a question
+4. Comment/reply on a question
+5. View questions as a list
+6. up/down vote an answer (If possible)
 
-
+Backend should be implemented as REST APIs and frontend using JQuery
+When in doubt about the requirements, just make assumptions based on your own
+knowledge of how these kind of sites work. Just state your assumptions rather than stop work and ask questions about requirements
 
 
 

@@ -143,6 +143,7 @@ In the UserResource::getUsers method we will retrive users from the database lik
 public List<User> getUsers() {
 	Session ses = HibernateUtil.currentSession();
 	return ses.createQuery("select u from User u").list();
+	HibernateUtil.closeSession();
 }
 
 
@@ -178,7 +179,54 @@ public class HibernateUtil {
 		
 	}
 }
+---------------
+retrieve all users:
+GET http://localhost:8080/warname/services/users
+	public List<User> getUsers() {
+	}
+retrieve one user:
+GET http://localhost:8080/warname/services/users/3
+	@GET
+	@Path("/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public User getUser(@PathParam("id") Integer id) {
+	}
+retrieve users with a certain age:
+GET http://localhost:8080/warname/services/users?ageFrom=18&ageTo=30
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getUsers(@QueryParam("ageFrom") Integer ageFrom,
+								@QueryParam("ageTo") Integer ageTo) {
+	}
 
+
+Create an user:
+POST http://localhost:8080/warname/services/users
+user data sent in JSON format in post body
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public User createUser(User u) {
+		//session.save....
+	}
+
+Update a user:
+PUT http://localhost:8080/warname/services/users
+user data sent in JSON format in post body WITH ID
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public User updateUser(User u) {
+		//session.update....
+	}
+	
+Delete an user
+DELETE http://localhost:8080/warname/services/users/3
+	@DELETE
+	@Path("/{id}")
+	public void deleteUser(@PathParam("id") Integer id) {
+		//session.delete....
+	}
 
 
 

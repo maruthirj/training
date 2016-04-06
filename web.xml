@@ -7,14 +7,18 @@
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>
-			com.sun.jersey.spi.container.servlet.ServletContainer
+			org.glassfish.jersey.servlet.ServletContainer
 		</servlet-class>
 		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-name>jersey.config.server.provider.packages</param-name>
 			<param-value>com.mydomain.service</param-value>
 		</init-param>
 		<init-param>
-			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-name>jersey.config.server.provider.scanning.recursive</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jersey.api.json.POJOMappingFeature</param-name>
 			<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>

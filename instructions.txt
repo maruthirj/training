@@ -73,6 +73,31 @@ Copy the newly generated war to tomcat\webapps
 start tomcat
 test
 
+-----------------------
+
+$.get("flights.json", function(data){
+		var rowTemplate = $("#templates table").html();
+		console.log(rowTemplate);
+		for(index in data){
+			var row = rowTemplate.replace("flight_no",data[index].flight_no)
+						.replace("airline",data[index].airline)
+						.replace("capacity",data[index].capacity);
+			$("#flights").append(row);
+		}
+	});
+
+------------------------------
+
+<body>
+<div id="templates" style="display: none;">
+	<table>
+		<tr><td>flight_no</td><td>airline</td><td>capacity</td></tr>
+	</table>
+</div>
+<table id="flights">
+<tr><td>Flight No</td><td>Airline</td><td>Capacity</td></tr>
+</table>
+</body>
 
 
 

@@ -53,6 +53,40 @@ Copy hibernate-cfg.xml into src/main/java and Users.hbm.xml into respective proj
 Go to command line, run mvn package and copy the war file to tomcat 
 Test by invoking the urls on postman/browser
 
+CORRECTIONS:
+
+Copy hibernate.cfg.xml to src\main\resources 
+copy Users.hbm.xml to src\main\resources\com\mydomain\model (Or whateever your package is)
+In the rest service pom xml copy only the following dependency from hibernate:
+<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.9.Final</version>
+		</dependency>
+Stop tomcat
+Delete teh war and the folder from tomcat\webapps
+Run these maven commands:
+
+mvn clean
+mvn package
+Copy the newly generated war to tomcat\webapps
+start tomcat
+test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

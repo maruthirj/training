@@ -183,6 +183,22 @@ WORKDIR $VERTICLE_HOME
 ENTRYPOINT ["sh", "-c"]
 CMD ["vertx run $VERTICLE_NAME -cp $VERTICLE_HOME/*"]
 
+------------
+Add this to pom.xml for building:
+<build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+------------
 Commit everything to github
 Pull into a folder on the container
 

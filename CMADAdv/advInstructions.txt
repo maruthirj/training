@@ -214,3 +214,77 @@ When done
 docker stop restvertx
 
 -----------------------------
+
+Fix up the REST api with mongodb backend
+Pickup ServicesFactory and User.java from github shared url.
+
+Here is how to use it:
+Datastore dataStore = ServicesFactory.getMongoDB();
+dataStore.save(u);
+
+ObjectId oid = null;
+try {
+		oid = new ObjectId(id);
+	} catch (Exception e) {// Ignore format errors
+	}
+List<User> users = dataStore.createQuery(User.class).field("id")
+				.equal(oid).asList();
+				
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>1.0.0-rc0</version>
+		</dependency>
+				
+public void handle(RoutingContext routingContext) {
+		System.out.println("Thread UserPersister: " + Thread.currentThread().getId());
+		// This handler will be called for every request
+		HttpServerResponse response = routingContext.response();
+		routingContext.request().bodyHandler(new Handler<Buffer>() {
+			public void handle(Buffer buf) {
+				String json = buf.toString("UTF-8");
+				ObjectMapper mapper = new ObjectMapper();
+				UserDTO dto = null;
+				try {
+					dto = mapper.readValue(json, UserDTO.class);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				User u = dto.toModel();
+				Datastore dataStore = ServicesFactory.getMongoDB();
+				dataStore.save(u);
+				response.setStatusCode(204).end("Data saved");
+			};
+		});
+	}
+	
+	public void handle(RoutingContext routingContext) {
+		// This handler will be called for every request
+		HttpServerResponse response = routingContext.response();
+		String id = routingContext.request().getParam("id");
+
+		response.putHeader("content-type", "application/json");
+		Datastore dataStore = ServicesFactory.getMongoDB();
+		ObjectId oid = null;
+		try {
+			oid = new ObjectId(id);
+		} catch (Exception e) {// Ignore format errors
+		}
+		List<User> users = dataStore.createQuery(User.class).field("id").equal(oid).asList();
+		if (users.size() != 0) {
+			UserDTO dto = new UserDTO().fillFromModel(users.get(0));
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.valueToTree(dto);
+			response.end(node.toString());
+		} else {
+			response.setStatusCode(404).end("not found");
+		}
+	}
+Once this is working ok, move these into blocking code executors.
+
+------------------------------

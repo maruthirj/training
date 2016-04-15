@@ -1,0 +1,200 @@
+Download tomcat 8 and unzip it into some folder
+Open eclipse and create a new project-> dynamic web project
+In WebContent folder create a index.html with a script section for java script
+Create three json files in WebContent folder with some dummy data (1.json, 2.json, 3.json)
+In script section, write an ajax call to load 1.json.
+Upon completion load 2.json and upon completion load 3.json
+Right click project -> run as -> run on server.
+Configure tomcat by specifying home directory and run
+------------------
+Create a maven project and setup dependencies to vertx
+
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-web</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+Create a verticle, deploy and run
+
+public class MyVerticle extends AbstractVerticle {
+
+    @Override
+    public void start(Future<Void> startFuture) {
+        System.out.println("MyVerticle started!");
+    }
+
+    @Override
+    public void stop(Future stopFuture) throws Exception {
+        System.out.println("MyVerticle stopped!");
+    }
+
+}
+
+public static void main(String[] args) {
+		VertxOptions options = new VertxOptions().setWorkerPoolSize(10);
+		Vertx vertx = Vertx.vertx(options);
+		vertx.deployVerticle("com.mydomain.MyVerticle");
+}
+
+--------------------
+Deploy another verticle and setup communication
+
+Here is how we sequence verticle deployment
+vertx.deployVerticle("com.mydomain.MyVerticle",new Handler<AsyncResult<String>>() {
+		    @Override
+		    public void handle(AsyncResult<String> stringAsyncResult) {
+		        System.out.println("Verticle deployment complete");
+		        }
+		    });
+		    
+Here is how we register and send messages:
+
+vertx.eventBus().consumer("Channel1", message -> {
+       System.out.println("message.body() = "
+                + message.body());
+});
+vertx.eventBus().publish("Channel1", "message 2");
+
+---------------------
+http://10.169.20.164/Cxwebinterface/odata/v1/Results?$filter=ScanId%20eq%201000000&$expand=Query%28$expand=QueryCxDescription%29
+Create a basic http responder:
+
+While deploying the verticle:
+HttpServer server = vertx.createHttpServer();
+Router router = Router.router(vertx);
+router.get("/services/users/:id").handler(new UserLoader());
+server.requestHandler(router::accept).listen(8080);
+
+
+In handler:
+String id = routingContext.request().getParam(“id”);
+HttpServerResponse response = routingContext.response();
+response.putHeader("content-type", “application/json");
+response.end(jsonresponse)		
+
+----------------------
+
+Start building a full rest API:
+Here is how we handle body data in vertx
+
+restAPI.route().handler(BodyHandler.create());
+
+restAPI.post("/user").handler(rc -> {
+	String jsonStr = rc.getBodyAsString();
+			.....
+	
+	ObjectMapper mapper = new ObjectMapper();
+    UserDTO dto = mapper.readValue(jsonStr, UserDTO.class);		
+    
+Here is how we would create a json string for response
+
+            ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.valueToTree(dto);
+			response.end(node.toString());
+----------------------
+
+Get this app to serve static content by adding this:
+
+router.route().handler(StaticHandler.create()::handle);
+
+Create webroot folder under src/main/resources and copy an index.html in there
+access it with : localhost:8080/index.html
+
+Move yesterday's javascript code in there
+----------------------
+
+Try promises in jquery in the index.html
+
+$.get() method returns a promise that has the following functions 
+done(successfunc)
+fail(failurefunc)
+always(alwaysfunc)
+
+And has a chaining function called 
+then(successfunc, failurefunc)
+
+Use the then() function to make the three json calls
+
+var name="";
+	$.get("one.json")
+	.then(function(data){
+		name = name + data.name+" ";
+		return $.get("two.json");
+	}).then(function(data2){
+		name = name + data2.name+" ";
+		return $.get("three.json");
+	}).then(function(data3){
+		name = name + data3.name+" ";
+		console.log(name);
+	})
+	
+---------------------
+	
+Try parallel execution
+
+below function takes a bunch of promises and resolves them together
+$.when(prom1, prom2, prom3).done(function(d1,d2,d3){})
+
+
+
+
+
+
+
+
+
+
+	var onePromise = $.get("one.json");
+	var twoPromise = $.get("two.json");
+	var threePromise = $.get("three.json");
+	
+	$.when(onePromise, twoPromise, threePromise).done(function(data1, data2, data3) {
+		//Returns an array of data, success/failure status, XHR object
+		console.log(data1[0].name+" "+data2[0].name+" "+data3[0].name);	
+	}).fail(function(data1,data2,data3) {
+		console.log(data1+" "+data2+" "+data3);
+	}) 
+
+git remote add origin https://github.com/maruthirj/vertxrepo.git
+git push -u origin master
+---------------------
+
+Run this on a container.
+
+Create a 'Dockerfile' in the project root that will bundle the built archive into a container
+
+# Extend vert.x image
+FROM vertx/vertx3
+
+#                                                       
+ENV VERTICLE_NAME com.mydomain.myapp.RestAppVerticle
+ENV VERTICLE_FILE target/VertxREST-0.0.1-SNAPSHOT.jar
+
+# Set the location of the verticles
+ENV VERTICLE_HOME /usr/verticles
+
+EXPOSE 8080
+
+# Copy your verticle to the container                   
+COPY $VERTICLE_FILE $VERTICLE_HOME/
+
+# Launch the verticle
+WORKDIR $VERTICLE_HOME
+ENTRYPOINT ["sh", "-c"]
+CMD ["vertx run $VERTICLE_NAME -cp $VERTICLE_HOME/*"]
+
+Commit everything to github
+Pull into a folder on the container
+
+Now run these commands to build an image and run the container
+
+docker build --tag restvertx .
+docker run -p 8080:8080 restvertx &
+
+http://<container ip address>:8080/api/user/2
+
+When done
+
+docker stop restvertx
+
+-----------------------------

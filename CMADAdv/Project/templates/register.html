@@ -1,0 +1,69 @@
+<form name="register" class="form-horizontal" novalidate>
+	<div class="form-group" >
+		<label for="inputUserName" class="control-label col-md-2">User Name</label><div class="col-md-4"><input type="text"
+			class="form-control" id="inputUserName" placeholder="User name"
+			ng-model="user.userName" required></div>
+	</div>
+	<div class="form-group">
+		<label for="inputPassword" class="control-label col-md-2">Choose Password</label><div class="col-md-4"> <input
+			type="password" class="form-control" id="inputPassword"
+			placeholder="Password" ng-model="user.password" required></div>
+	</div>
+	<div class="form-group">
+		<label for="confirmPassword" class="control-label col-md-2">Confirm Password</label><div class="col-md-4"> <input
+			type="password" class="form-control" id="confirmPassword"
+			placeholder="Password" ng-model="confirmPassword" required></div>
+	</div>
+	<div class="form-group">
+		<label for="inputEmail" class="control-label col-md-2">Email</label><div class="col-md-4"> <input type="email"
+			class="form-control" id="inputEmail" placeholder="Email"
+			ng-model="user.email" required></div>
+	</div>
+	<div class="form-group" >
+		<label for="inputFirstName" class="control-label col-md-2">First Name</label><div class="col-md-4"> <input type="text"
+			class="form-control" id="inputFirstName" placeholder="First name"
+			ng-model="user.first" required></div>
+	</div>
+	<div class="form-group" >
+		<label for="inputLastName" class="control-label col-md-2">Last Name</label><div class="col-md-4"> <input type="text"
+			class="form-control" id="inputLastName" placeholder="Last name"
+			ng-model="user.last" required></div>
+	</div>
+	<div class="checkbox col-md-10 col-md-offset-2">
+		<label><input type="checkbox" name="isCompany" ng-model="user.isCompany"> This is a company registration</label>
+	</div>
+	<div class="form-group" ng-show="!user.isCompany">
+		<label for="companyId" class="control-label col-md-2">Select Company<span ng-show="isLoadingCompanies"><img src="images/loading.gif"></img></span></label> 
+		<div class="col-md-4"><select name="companyId" class="form-control" ng-model="user.companyId" ng-change="companyChange(user.companyId)" id="companyId">
+			<option ng-repeat="company in companies" value="{{company.id}}">{{company.companyName}}</option>
+		</select></div>
+	</div>
+	<div class="form-group" ng-show="!user.isCompany">
+		<label for="siteId" class="control-label col-md-2">Select Site<span ng-show="isLoadingSites"><img src="images/loading.gif"></img></span></label> 
+		<div class="col-md-4"><select name="siteId" class="form-control" ng-model="user.siteId" id="siteId" ng-change="siteChange(user.companyId,user.siteId)">
+			<option ng-repeat="site in sites" value="{{site.id}}">{{site.siteName}}</option>
+		</select></div>
+	</div>
+	<div class="form-group" ng-show="!user.isCompany">
+		<label for="deptId" class="control-label col-md-2">Select Department<span ng-show="isLoadingDepts"><img src="images/loading.gif"></img></span></label> 
+		<div class="col-md-4"><select name="deptId" class="form-control" ng-model="user.deptId" id="deptId">
+			<option ng-repeat="dept in departments" value="{{dept.id}}">{{dept.deptName}}</option>
+		</select></div>
+	</div>
+	<div class="form-group" ng-show="user.isCompany">
+		<label for="inputCompanyName" class="control-label col-md-2">Company Name</label><div class="col-md-4"> <input type="text"
+			class="form-control" id="inputCompanyName" placeholder="Company Name"
+			ng-model="user.companyName"></div>
+	</div>
+	<div class="form-group" ng-show="user.isCompany">
+		<label for="inputDeptName" class="control-label col-md-2">Default Department</label><div class="col-md-4"> <input type="text"
+			class="form-control" id="inputDeptName" placeholder="Department Name"
+			ng-model="user.deptName"></div>
+	</div>
+	<div class="form-group" ng-show="user.isCompany">
+		<label for="inputCompanySubdomain" class="control-label col-md-2">Company Subdomain</label><div class="col-md-2"> <input type="text"
+			class="form-control" id="inputCompanySubdomain" placeholder="Company Subdomain"
+			ng-model="user.subdomain"><div>.mysocial.com</div></div>
+	</div>
+	<button type="submit" class="btn btn-primary" ng-click="register.$valid && submitRegister(user)">Register</button>
+</form>

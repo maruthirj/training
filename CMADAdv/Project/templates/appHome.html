@@ -1,0 +1,113 @@
+<div class="row">
+
+	<!-- Blog Post Content Column -->
+	<div class="col-lg-8">
+		<div  ng-repeat="blog in blogs">
+			<!-- Blog Post -->
+			<!-- Title -->
+			<h1>{{blog.title}}</h1>
+			<!-- Author -->
+			<p class="lead">
+				by <a href="#">{{blog.userFirst}} {{blog.userLast}}</a>
+			</p>
+			<hr>
+			<!-- Date/Time -->
+			<p>
+				<span class="glyphicon glyphicon-time"></span> Posted on {{blog.date |  date:'yyyy-MM-dd HH:mm Z'}}
+			</p>
+			<hr>
+			<!-- Post Content -->
+			<p ng-bind-html="blog.content"></p>
+			<hr>
+			<!-- Blog Comments -->
+			<!-- Comments Form -->
+			<div class="well">
+				<h4>Leave a Comment:</h4>
+				<form role="form">
+					<div class="form-group">
+						<textarea class="form-control" rows="3" ng-model="comment.content"></textarea>
+						<input type="hidden" value="{{blog.id}}" ng-model="comment.blogId"></input>
+					</div>
+					<button type="submit" class="btn btn-primary" ng-click="submitComment(comment, blog.id )">Submit</button>
+				</form>
+			</div>
+			<hr>
+			<!-- Posted Comments -->
+			<!-- Comment -->
+			<div class="media" ng-repeat="comment in blog.comments">
+				<a class="pull-left" href="#"> <img class="media-object"
+					src="http://placehold.it/64x64" alt="">
+				</a>
+				<div class="media-body">
+					<h4 class="media-heading">
+						{{comment.userFirst}} {{comment.userLast}} <small>{{comment.date | date:'yyyy-MM-dd HH:mm Z'}}</small>
+					</h4>
+					{{comment.content}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Blog Sidebar Widgets Column -->
+	<div class="col-lg-4">
+
+		<!-- Blog Search Well -->
+		<div class="well">
+			<h4>Blog Search</h4>
+			<div class="input-group">
+				<input type="text" class="form-control" ng-model="searchTag"> <span
+					class="input-group-btn" >
+					<button class="btn btn-default" type="button" ng-click="tagSearch()">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>
+			</div>
+			<!-- /.input-group -->
+		</div>
+
+		<!-- Users Well -->
+		<div class="well">
+			<h4>Online users</h4>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="list-group">
+						<a href="#" class="list-group-item" ng-repeat="user in connectedUsers">{{user.first}} {{user.last}}</a>
+					</div>
+					<button type="submit" class="btn btn-info" ng-click="showChat=true">Chat All</button>
+				</div>
+			</div>
+			<!-- /.row -->
+		</div>
+		
+		<!-- Chat Well -->
+		<div class="well" ng-show="showChat">
+			<h4>Live Chat</h4>
+			<div class="row" >
+				<div class="col-lg-12" >
+					<div class="panel-body chat-box-main">
+						<div ng-repeat="message in chatMessages">
+	                        <div class="chat-box-left">
+	                            {{message.text}}
+	                        </div>
+	                        <div class="chat-box-name-left">
+	                            -  {{message.sender}}
+	                        </div>
+                        </div>
+                    </div>
+					<div class="chat-box-footer">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter Text Here..." ng-model="chatMessage">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button" ng-click="sendMessage(chatMessage)">SEND</button>
+                            </span>
+                        </div>
+                    </div>
+
+				</div>
+			</div>
+			<!-- /.row -->
+		</div>
+
+	</div>
+
+</div>

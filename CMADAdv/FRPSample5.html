@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>CanJS</title>
+<script src="scripts/jquery-2.1.3.js"></script>
+<script src="scripts/Bacon.js"></script>
+<!-- REDUCE operation to print the value of the count of players -->
+<script type="text/javascript">
+
+$(document).ready(function(){
+	var loginValidProperty = $("input[name='loginname']")
+							.asEventStream("keyup")
+							.map(function(event) { 
+								var str = $(event.target).val()
+								if(str.length>8){
+									return "Yes";
+								}else{
+									return "No";
+								}
+							}).toProperty("No");
+	
+	var emailValidProperty = $("input[name='email']")
+						.asEventStream("keyup")
+						.map(function(event) { 
+							var str = $(event.target).val()
+							if(str.match(/@/g)!=null){
+								return "Yes";
+							}else{
+								return "No";
+							}
+						}).toProperty("No");
+	
+	
+	var ajaxResp = loginValidProperty.changes().map(function(loginName) { return $.ajax({ url : "isUserValid.txt?"+loginName})});
+	
+	
+	var loginAndEmailProperty = ajaxResp.combine(emailValidProperty, function(a,b){
+		console.log(a+","+b);
+		console.log(a.responseText);
+		if(a.responseText=='true' && b==='Yes')
+			return 'Yes';
+		return 'No'
+	});
+	
+	loginAndEmailProperty.onValue(function(valid) {
+	    $("#validSpan").html(valid)
+	});
+	
+	//$.ajax({ url : "isUserValid.txt"}).done(function(result) { console.log(result)})
+	var playersResponse = Bacon.fromPromise($.ajax({ url : "players.json"}));
+	var playersStream = playersResponse.flatMap(function(data){
+				console.log("Players Response Stream Event: ");
+				console.log(data);
+				return Bacon.fromArray(data.data);
+			})
+	var filteredPlayerStream = playersStream.filter(function(player){
+				console.log("Players Stream Event: ");
+				console.log(player);
+				if(player.role!='retd'){
+					return true;
+				}else{
+					return false;
+				}
+			});
+	filteredPlayerStream.onValue(function(filteredPlayer){
+				console.log("filteredPlayerStream Event: ");
+				console.log(filteredPlayer);
+				$("#players").append("<div>"+filteredPlayer.name+"</div>")
+			});
+	var countProperty = playersStream.scan(0,function(prev,current){return prev+1;});
+	countProperty.onValue(function(playerCount){
+		$("#playersCount").html("Total player count = "+playerCount);
+	});
+	
+});
+</script>
+</head>
+<body>
+
+<form action"myaction" method="post">
+	Login Name: <input name="loginname"/><span id="validSpan"></span><br>
+	First Name: <input name="firstname"/><br>
+	Last Name:<input name="lastname"/><br>
+	Email: <input name="email"/><br>
+</form>
+<div id="players">
+</div>
+<div id="playersCount">
+</div>
+
+</body>
+</html>

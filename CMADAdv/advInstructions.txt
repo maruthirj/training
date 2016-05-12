@@ -333,9 +333,50 @@ POM to use:
 			<artifactId>vertx-hazelcast</artifactId>
 			<version>3.2.1</version>
 		</dependency>
+---------------------------------
+These will be created as 3 different eclipse projects
+In the root of these projects place the Dockerfile and logging.properties from share
+In src/main/resources, place the cluster.xml from share
+In each project edit the cluster.xml to change port numbers 5701, 5702, 5703
+DepositVerticle should run on 8080 and CustInfo on 8090 (Server listen)
 
+Docker commands to build these containers
 
+mvn package
+docker build -t deposit .
+docker run -i -p 8080:8080 -p 5701:5701 --name r_deposit deposit
 
+mvn package
+docker build -t custclass .
+docker run -i -p 5703:5703 --name r_custclass custclass
+-----------------
+For HA proxy, pick up the haproxy.cfg and put it in a folder
+In the same folder create a Dockerfile with this content:
+
+FROM haproxy:1.5
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+
+Then build and run:
+docker build -t proxy .
+docker run -d -p 80:80 --name running_proxy proxy
+
+A useful script to stop and cleanup all containers stopAll.sh:
+——————————————-
+docker stop r_custclass
+docker stop r_deposit
+docker stop r_custinfo
+docker rm r_custclass
+docker rm r_deposit
+docker rm r_custinfo
+docker rmi custclass
+docker rmi custinfo
+docker rmi deposit
+------------------------------------
+
+Start all containers:
+mongo,deposit,custclassification,haproxy
+
+Access the deposit API via <VM host>:80
 
 
 

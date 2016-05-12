@@ -288,3 +288,82 @@ public void handle(RoutingContext routingContext) {
 Once this is working ok, move these into blocking code executors.
 
 ------------------------------
+** DepositVerticle. 
+Two APIs
+“/account/:accountNumber" - post and get account with balance info
+fields for add: AccountNumber 
+fields for get: AccountNumber, balance
+
+/account/:accountNumber/money - add money
+Input: AccountNumber, Amount
+
+Implement rest end points that persist info to mongo
+Raises event with money object after persisted on depositInfo bus
+
+** CustomerClassificationVerticle
+Registers a subscriber on 2 event buses.
+depositInfo - Money object is received here
+custInfo - Customer Object is received here
+
+Persists this info after computation. 
+Class A = Customers with with Deposit > 50000 AND age < 45
+Class B = Customers with with Deposit > 50000 AND age > 45
+
+** CustomerInfoVerticle
+
+/customer POST and GET
+customer fields: name, age, profession, accountnumber
+
+Raises event with customer object after persisted on custInfo bus
+-------------------------------
+POM to use:
+
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-mongo-client</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-hazelcast</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

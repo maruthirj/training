@@ -378,6 +378,16 @@ mongo,deposit,custclassification,haproxy
 
 Access the deposit API via <VM host>:80
 
+May 08, 2016 6:07:29 AM com.hazelcast.cluster.ClusterService
+INFO: [172.17.0.51]:5701 [dev] [3.5.2] 
+
+Members [2] {
+	Member [172.17.0.51]:5701 this
+	Member [172.17.0.52]:5703
+}
+
+sudo route add -net 224.2.2.3 -interface lo0
+
 
 
 

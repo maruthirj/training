@@ -1,0 +1,16 @@
+<div class="col-md-4">
+	<form name="userForm" novalidate>
+		<div class="form-group">
+			<label for="inputEmail">User Name</label> <input type="text"
+				class="form-control" id="inputEmail" placeholder="User name"
+				ng-model="user.userName" required>
+		</div>
+		<div class="form-group">
+			<label for="inputPassword">Password</label> <input type="password"
+				class="form-control" id="inputPassword" placeholder="Password"
+				ng-model="user.password" required>
+		</div>
+		<button type="submit" class="btn btn-primary" ng-click="login(user)">Login</button>
+		<button type="button" class="btn" ng-click="register()">Register</button>
+	</form>
+</div>

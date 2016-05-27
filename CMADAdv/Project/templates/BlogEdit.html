@@ -1,0 +1,23 @@
+<div class="col-md-12">
+	<form name="blogForm" novalidate>
+		<div class="form-group col-md-4">
+			<label for="inputTitle">Title</label> <input type="text"
+				class="form-control" id="inputTitle" placeholder="Blog Title"
+				ng-model="blog.title" required>
+		</div>
+		<div class="form-group col-md-4">
+			<label for="inputTags">Tags</label> <input type="text"
+				class="form-control" id="inputTags" placeholder="Tag1, Tag2, Tag3"
+				ng-model="blog.tags" required>
+		</div>
+		<div class="form-group col-md-12">
+			<label for="inputPassword">Blog</label> 
+			<div text-angular ng-model="blog.content" name="blog-editor" ta-text-editor-class="border-around container" ta-html-editor-class="border-around">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<button type="submit" class="btn btn-primary" ng-click="saveBlog(blog)">Save</button>
+			<button type="button" class="btn" ng-click="cancel()">Cancel</button>
+		</div>
+	</form>
+</div>

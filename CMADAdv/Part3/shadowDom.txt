@@ -1,0 +1,19 @@
+<div id="listData">hari,veena,jaya</div>
+<template id="listTemplate">
+	<li></li>
+</template>
+</body>
+<script type="text/javascript">
+var template = document.querySelector('#listTemplate');
+var host = document.querySelector('#listData');
+var csvText = host.innerHTML;
+var root = host.createShadowRoot();
+var names = csvText.split(",");
+for(index in names ) {
+	console.log("Adding "+names[index]);
+	var clone = document.importNode(template.content, true);
+	console.log(clone);
+	clone.childNodes[1].appendChild(document.createTextNode(names[index]));
+	root.appendChild(clone);	
+}
+alert(document.querySelector('#listData').innerHTML);
